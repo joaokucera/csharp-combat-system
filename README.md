@@ -1,2 +1,2 @@
 # csharp-combat-system
-A simple combat system game made with C#
+A test suite for a combat system game made with C#
