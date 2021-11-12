@@ -1,0 +1,5 @@
+.idea
+**/packages/*
+*.user
+CombatTest/bin
+CombatTest/obj
