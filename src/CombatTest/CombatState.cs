@@ -7,7 +7,7 @@ namespace CombatTest
 {
     public class CombatState
     {
-        private readonly List<Team> _teams = new List<Team>();
+        private readonly List<Team> _teams = new();
 
         public CombatStateEnum CurrentCombatState { get; set; }
         public Dictionary<Team, List<Unit>> TeamsWithOriginalUnits { get; }
@@ -49,17 +49,16 @@ namespace CombatTest
                     }
                 }
             }
-            
+
             if (attackingUnits.HasUnitsWithSameSpeed())
             {
                 attackingUnits = attackingUnits.SortRandomlyAttackingUnits(_teams);
             }
             else
             {
-                // Sorting by speed only
                 attackingUnits.Sort();
             }
-            
+
             foreach (var unit in attackingUnits)
             {
                 yield return unit;
@@ -136,22 +135,13 @@ namespace CombatTest
             }
         }
 
-        /// <summary>
-        /// The most simplistic state machine (with switch cases) as the matrix of possibilities does not required complexity.
-        /// Could be also done by adding a command pattern layer, however, I dont see the reason to add complexity for such simple case. 
-        /// </summary>
         private async Task PerformAbilityByUnit(Unit unit)
         {
             if (unit.TryGetRandomAbility(out var ability))
             {
-                // **TargetTeam**: To which team this ability can be cast. It has two options: *Ally* team or *Enemy* team
                 switch (ability.TargetTeam)
                 {
                     case TargetTeam.Ally:
-                        // **TargetNum**: To whom this ability can be cast. It has three options:
-                        // *Self* (the more restrictive one. This ability just can be cast to the unit that is casting it),
-                        // *Single* (just one target. `Self` is a subgroup on this target),
-                        // and *All* (all the units that are in the TargetTeam)
                         switch (ability.TargetNum)
                         {
                             case TargetNum.Self:
@@ -180,8 +170,6 @@ namespace CombatTest
                         switch (ability.TargetNum)
                         {
                             case TargetNum.Self:
-                                // If it happens, there is a wrong configuration as TargetNum.Self can be cast
-                                // to the unit that is casting it only, so ability.TargetTeam should be TargetTeam.Ally
                                 await unit.PerformAbility(ability);
                                 break;
                             case TargetNum.Single:
@@ -209,8 +197,6 @@ namespace CombatTest
             }
             else
             {
-                // If the unit has no abilities, apply physical damage as fallback
-                // It will only happen if any peace of coe would call this method without checking 
                 PerformPhysicalDamageByUnit(unit);
             }
         }

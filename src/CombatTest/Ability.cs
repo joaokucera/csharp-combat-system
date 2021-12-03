@@ -17,12 +17,10 @@ namespace CombatTest
             Amount = amount;
             StatAffected = statAffected;
             IsPermanent = isPermanent;
-            
-            // If the number of turns is 0, it will be applied *instantly*.
-            // *** so, I assume if TurnsApplied == 1, the "spell" will be applied instantly and in the next turn ***
+
             TurnsApplied = turnsApplied;
         }
-        
+
         public void DecrementTurnsAppliedValue()
         {
             TurnsApplied--;

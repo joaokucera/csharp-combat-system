@@ -10,7 +10,7 @@ namespace CombatTest
         private const int BarValueToAttack = 100;
 
         private int _currentBarValue;
-        private readonly Random _random = new Random();
+        private readonly Random _random = new();
         private readonly IAnimationTrigger _animationTrigger = new AnimationTrigger();
 
         public Team Team { get; }
@@ -22,8 +22,8 @@ namespace CombatTest
         public int CurrentHealth { get; private set; }
         public bool IsAlive => CurrentHealth > 0;
         public bool CanAttack => _currentBarValue >= BarValueToAttack;
-        public List<Ability> OwnAbilities { get; } = new List<Ability>();
-        public List<Ability> AppliedAbilities { get; private set; } = new List<Ability>();
+        public List<Ability> OwnAbilities { get; } = new();
+        public List<Ability> AppliedAbilities { get; private set; } = new();
 
         public Unit(Team team, int health = 0, int attack = 0, int defence = 0, int speed = 0)
         {
@@ -67,7 +67,6 @@ namespace CombatTest
         {
             if (OwnAbilities.Count == 0)
             {
-                // If the unit has no abilities, it will always perform a PhysicalAttack
                 return UnitAction.PhysicalAttack;
             }
 
@@ -86,10 +85,8 @@ namespace CombatTest
 
         public async Task PerformAbility(Ability ability, bool canAddAbility = true)
         {
-            // The class AnimationTrigger should be use to simulate it.
             await _animationTrigger.PlayAnimation();
-            
-            // Instant ability action - it will only count down if the ability is applied for more than 1 round
+
             switch (ability.StatAffected)
             {
                 case Stat.Health:
@@ -108,7 +105,6 @@ namespace CombatTest
                     throw new ArgumentOutOfRangeException();
             }
 
-            // If the ability is permanent or it is applied for more than 1 turn, add it to the applied abilities list
             if (canAddAbility && (ability.IsPermanent || ability.TurnsApplied > 0))
             {
                 AppliedAbilities.Add(ability);
@@ -118,13 +114,12 @@ namespace CombatTest
         public async Task PerformAppliedAbilities()
         {
             var abilitiesToKeep = new List<Ability>();
-            
+
             foreach (var ability in AppliedAbilities)
             {
                 if (ability.IsPermanent || ability.TurnsApplied > 0)
                 {
                     await PerformAbility(ability, false);
-                    // Decrement the amount of turns applied (does not interfere with the permanent flag)
                     ability.DecrementTurnsAppliedValue();
                 }
 
@@ -133,7 +128,7 @@ namespace CombatTest
                     abilitiesToKeep.Add(ability);
                 }
             }
-            
+
             AppliedAbilities = abilitiesToKeep;
         }
 

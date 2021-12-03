@@ -4,7 +4,7 @@ namespace CombatTest.Utils
 {
     public static class AbilityFactory
     {
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new();
 
         public static Ability CreateRandomAbility()
         {
@@ -35,7 +35,7 @@ namespace CombatTest.Utils
         public static Ability CreateAbility(TargetTeam targetTeam, TargetNum targetNum, int amount, Stat stat,
             bool isPermanent, int turnsApplied)
         {
-            return new Ability(targetTeam, targetNum, amount, stat, isPermanent, turnsApplied);
+            return new(targetTeam, targetNum, amount, stat, isPermanent, turnsApplied);
         }
     }
 }

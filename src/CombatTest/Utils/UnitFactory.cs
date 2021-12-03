@@ -4,7 +4,7 @@ namespace CombatTest.Utils
 {
     public static class UnitFactory
     {
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new();
         
         public static Unit CreateRandomUnit(Team team)
         {
@@ -39,7 +39,7 @@ namespace CombatTest.Utils
         
         public static Unit CreateUnit(Team team, int health, int attack, int defence, int speed)
         {
-            return new Unit(team, health, attack, defence, speed);
+            return new(team, health, attack, defence, speed);
         }
     }
 }

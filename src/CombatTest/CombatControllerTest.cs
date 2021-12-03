@@ -101,7 +101,6 @@ namespace CombatTest
                 await unit.PerformAppliedAbilities();
             }
 
-            // turnsApplied = 0 applies 1 time, 1 applies 2 times, and so on
             var expectedHealth = unitHealthAfterDamage + abilityAmount * (turnsApplied + 1);
             Assert.AreEqual(expectedHealth, unit.CurrentHealth);
         }
@@ -129,7 +128,6 @@ namespace CombatTest
                 i++;
                 if (i + 1 > turnsApplied)
                 {
-                    // Stop performing after iterating more than amount of turns as the AppliedAbilities.Count wont be reduced
                     break;
                 }
             }
@@ -204,8 +202,7 @@ namespace CombatTest
             ICombatController combatController = new CombatController();
             await combatController.Run(combatState, turnsToRun, barIncrementsPerTurn);
 
-            Assert.IsTrue(combatState.CurrentCombatState == CombatStateEnum.EndedWithWinningTeam ||
-                          combatState.CurrentCombatState == CombatStateEnum.EndedWithoutWinningTeam,
+            Assert.IsTrue(combatState.CurrentCombatState is CombatStateEnum.EndedWithWinningTeam or CombatStateEnum.EndedWithoutWinningTeam,
                 "CurrentCombatState should be any Ended");
             Assert.IsFalse(combatState.TeamsWithAliveUnits.Any(t => t.Value.Any(u => !u.IsAlive)));
         }
